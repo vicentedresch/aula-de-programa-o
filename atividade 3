@@ -1,0 +1,8 @@
+lista=['Alexandre','Alice','André','Arthur','Arthur','Artur','Augusto','Bernardo','Bernardo','Bruno','Davi','Diego','Eduardo','Fabrício','Felipe','Fernando','Francisco','Francisco','Gabriel','Gabriel','Giovanna','Giovanni','Guilherme','Guilherme','Hector','Henrique','Inácio','João','João','Joaquim','Júlia','Lauren','Leonardo','Leonardo','Lucas','Marina','Matheus','Matheus','Paula','Pedro','Pedro','Pedro','Pedro','Rafael','Regis','Sofia','Stella','Thiago','Valentina','Vicente','Lucas']
+lista2=sorted(lista)
+lista3=[]
+print(f'a lista, organizada em ordem alfabética é {lista2}')
+
+for i in range(len(lista2)):
+    lista3.append(lista[i][::-1])
+    print(lista3[i])
