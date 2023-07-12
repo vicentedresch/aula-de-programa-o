@@ -1,0 +1,41 @@
+import cv2
+import numpy as np
+
+# Carrega o modelo pré-treinado
+net = cv2.dnn.readNetFromCaffe('deploy.prototxt', 'MobileNetSSD_deploy.caffemodel')
+
+# Definição das classes de objetos que o modelo pode detectar
+classes = ['background', 'aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus',
+          'car', 'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse', 'motorbike',
+          'person', 'pottedplant', 'sheep', 'sofa', 'train', 'tvmonitor']
+
+# Carrega a imagem de exemplo
+image = cv2.imread('example.jpg')
+
+# Pré-processamento da imagem
+blob = cv2.dnn.blobFromImage(cv2.resize(image, (300, 300)), 0.007843, (300, 300), 127.5)
+
+# Passa a imagem pelo modelo
+net.setInput(blob)
+detections = net.forward()
+
+# Loop sobre as detecções e desenha os resultados na imagem
+for i in range(detections.shape[2]):
+    confidence = detections[0, 0, i, 2]
+    if confidence > 0.5:  # Define um limite de confiança
+        class_id = int(detections[0, 0, i, 1])
+        class_label = classes[class_id]
+        box = detections[0, 0, i, 3:7] * np.array([image.shape[1], image.shape[0], image.shape[1], image.shape[0]])
+        (startX, startY, endX, endY) = box.astype(int)
+
+        # Desenha o retângulo e a etiqueta da classe na imagem
+        cv2.rectangle(image, (startX, startY), (endX, endY), (0, 255, 0), 2)
+        label = f'{class_label}: {confidence:.2f}'
+        cv2.putText(image, label, (startX, startY - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+# Exibe a imagem resultante
+cv2.imshow('Object Detection', image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+# Certifique-se de substituir 'deploy.prototxt' e 'MobileNetSSD_deploy.caffemodel' pelos caminhos corretos do modelo pré-treinado "MobileNetSSD". Além disso, substitua 'example.jpg' pelo caminho da imagem que você deseja analisar.
